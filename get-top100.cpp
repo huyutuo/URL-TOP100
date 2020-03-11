@@ -25,6 +25,9 @@ unsigned Hash(const string &url)
 //将大文件分类到小文件中
 void classify_to_blocks(vector<ofstream> &ofs)
 {
+	clock_t t_st = clock(); 
+	printf("init start.\n"); 
+	printf("classify start.\n");
 	ifstream fin(data_path);
 	if(fin.fail())
 	{
@@ -43,15 +46,15 @@ void classify_to_blocks(vector<ofstream> &ofs)
 	fin.close();
 	for(int block_id = 0; block_id < blocks; block_id++)
 		ofs[block_id].close();
-
 	printf("classify end.\n");
-	printf("total urls: %llu\n", accumulate(block_count.begin(), block_count.end(), 0ull) );
-	printf("ave urls of block: %llu\n", accumulate(block_count.begin(), block_count.end(), 0ull)/blocks );
-	printf("max urls of block: %llu\n", *max_element(block_count.begin(), block_count.end()));
+	printf("classify_to_blockstime cost = %.2fs\n\n",double(clock()-t_st)/CLOCKS_PER_SEC );
 }
 //逐个找到每个文件的top100，并且与tatal进行比较替换
 vector< pair<string, unsigned>> find_top_from_blocks()
 {
+	clock_t t_st = clock(); 
+	printf("init start.\n"); 
+	printf("find_top_from_blocks start.\n");
 	using psu = pair<string, unsigned>;
 	auto big_top = [](psu &a, psu &b){return a.second < b.second;};  //小文件大顶堆
 	auto little_top = [](psu &a, psu &b){return a.second > b.second;}; // 全部文件小顶堆
@@ -97,13 +100,16 @@ vector< pair<string, unsigned>> find_top_from_blocks()
 		fin.close();
 	}
 	
-	sort(total_heap.begin(), total_heap.end(), little_top); 
-
+	sort(total_heap.begin(), total_heap.end(), little_top);
+	printf("find_top_from_blocks end.\n"); 
+	printf("find_top_from_blocks time cost = %.2fs\n\n",double(clock()-t_st)/CLOCKS_PER_SEC );
 	return total_heap;
 }
 //初始化tmp 并返回文件流
 vector<ofstream> init()
 {
+	clock_t t_st = clock(); 
+	printf("init start.\n"); 
 	string command = "mkdir -p " + block_path;
 	if(system(command.c_str())!=0)
 	{
@@ -120,28 +126,25 @@ vector<ofstream> init()
 			exit(1);
 		}
 	}
+	printf("init end.\n"); 
+	printf("init time cost = %.2fs\n\n",double(clock()-t_st)/CLOCKS_PER_SEC );
 	return ofs;
+}
+void store_into_file(vector<pair<string, unsigned>> top)
+{
+	string into_file_path = "top100.txt";
+	ofstream top_out;
+	top_out.open(into_file_path);
+	for(auto psu:top)
+	 	top_out << psu.second << " "<< psu.first.c_str() << endl;
+	 top_out << endl;
+	 cout << "DONE! : store top100 into " << into_file_path << endl;
 }
 int main(void)
 {
-	clock_t t_st = clock(); 
-	//vector<ofstream> ofs = init();
-	//printf("init time cost = %.2fs\n\n",double(clock()-t_st)/CLOCKS_PER_SEC );
-
-	 //t_st = clock();
-	 //printf("blocks = %d, hash radix = %d, find top %d\n\n", blocks, radix, limit );
-
-	 //classify_to_blocks(ofs);
-	 //printf("classify_to_blockstime cost = %.2fs\n\n",double(clock()-t_st)/CLOCKS_PER_SEC );
-     //t_st = clock();
-
-	 std::vector<std::pair<string, unsigned>> top = find_top_from_blocks();
-	 printf("find_top_from_blocks time cost = %.2fs\n\n",double(clock()-t_st)/CLOCKS_PER_SEC );
-
-	 printf("done.\n");
-	 for(auto psu:top)
-	 	printf("%d %s\n", psu.second, psu.first.c_str() );
-	 printf("\n");
-
+	vector<ofstream> ofs = init();
+	classify_to_blocks(ofs);
+	vector<pair<string, unsigned>> top = find_top_from_blocks();
+	store_into_file(top);
     return 0;
 }
