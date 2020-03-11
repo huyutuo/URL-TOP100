@@ -20,6 +20,8 @@ gen-url.cpp，随机产生总长度大于等于Total_len长度的url文件，存
 
 4. 100GB文件测试  空间不足，未能测试
 ## 运行
-sh gen-url.sh 生成data
-sh get-top100.sh 得到top100文件，存储在top100.txt内
-sh delete-tmp.sh 删除tmp文件夹内产生的小文件
+ sh gen-url.sh 生成data
+
+ sh get-top100.sh 得到top100文件，存储在top100.txt内
+
+ sh delete-tmp.sh 删除tmp文件夹内产生的小文件
