@@ -19,7 +19,7 @@ const string alphabet = "0123456789abcdefghijklmnopqrstuv";
 const int limitLen = (1 << 20) * 100 + 200;
 char buff[limitLen];
 int buffIndex;
-const long long Total_len = (long long)1024 * 1024 * 1024 * 1;
+const long long Total_len = (long long)1024 * 1024 * 1024 * 10;
 inline int get_slen(){return (get_rand()&10) + 1;}
 inline  int get_plen(){return (get_rand()&3) + 1;}
 inline  char get_char(){return alphabet[get_rand()&31];}
