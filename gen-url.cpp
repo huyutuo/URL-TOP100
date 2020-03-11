@@ -48,8 +48,8 @@ int main()
     clock_t t_st = clock();
     long long now = 0;
     freopen("../data/test.txt", "w", stdout);
-    while(now <= 100000){
-        long long tmp =min((long long)10000, Total_len - now);
+    while(now <= Total_len){
+        long long tmp =min((long long)limitLen, Total_len - now);
         while(buffIndex < tmp){
             get_url_1();add_char(':'); add_char('/'); add_char('/');
             add_string();add_char('.');

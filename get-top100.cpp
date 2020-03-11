@@ -26,7 +26,6 @@ unsigned Hash(const string &url)
 void classify_to_blocks(vector<ofstream> &ofs)
 {
 	clock_t t_st = clock(); 
-	printf("init start.\n"); 
 	printf("classify start.\n");
 	ifstream fin(data_path);
 	if(fin.fail())
@@ -53,7 +52,6 @@ void classify_to_blocks(vector<ofstream> &ofs)
 vector< pair<string, unsigned>> find_top_from_blocks()
 {
 	clock_t t_st = clock(); 
-	printf("init start.\n"); 
 	printf("find_top_from_blocks start.\n");
 	using psu = pair<string, unsigned>;
 	auto big_top = [](psu &a, psu &b){return a.second < b.second;};  //小文件大顶堆
@@ -138,9 +136,10 @@ void store_into_file(vector<pair<string, unsigned>> top)
 	for(auto psu:top)
 	 	top_out << psu.second << " "<< psu.first.c_str() << endl;
 	 top_out << endl;
+	 top_out.close();
 	 cout << "DONE! : store top100 into " << into_file_path << endl;
 }
-int main(void)
+int main()
 {
 	vector<ofstream> ofs = init();
 	classify_to_blocks(ofs);
